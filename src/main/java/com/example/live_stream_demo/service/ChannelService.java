@@ -7,4 +7,6 @@ public interface ChannelService {
     ChannelDto createChannel(ChannelCreationRequest request, Long id);
 
     ChannelDto getChannel(Long id);
+
+    String getChannelPlaybackUrl(Long channelId);
 }

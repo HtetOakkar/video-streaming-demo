@@ -7,6 +7,7 @@ import com.example.live_stream_demo.model.payload.response.LiveStreamCreateRespo
 import com.example.live_stream_demo.model.payload.response.LiveStreamViewResponse;
 import com.example.live_stream_demo.security.CurrentUser;
 import com.example.live_stream_demo.security.UserPrincipal;
+import com.example.live_stream_demo.service.ChannelService;
 import com.example.live_stream_demo.service.LiveStreamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ public class LiveStreamController {
 
     private final LiveStreamService liveStreamService;
 
+    private final ChannelService channelService;
+
     @PostMapping("/channels/{channelId}/live-streams")
     @PreAuthorize("hasRole('ROLE_BROADCASTER')")
     public ResponseEntity<?> createLiveStream(@PathVariable Long channelId, @CurrentUser UserPrincipal userPrincipal, @RequestBody LiveStreamRequest request) {
@@ -37,6 +40,12 @@ public class LiveStreamController {
     public LiveStreamViewResponse getLiveSteam(@PathVariable Long id) {
         LiveStreamDto liveStreamDto = liveStreamService.getLiveStream(id);
         return liveStreamMapper.toViewResponse(liveStreamDto);
+    }
+
+    @GetMapping("/channels/{channelId}/live-streams/latest")
+    public String getPlaybackUrl(@PathVariable Long channelId) {
+
+        return channelService.getChannelPlaybackUrl(channelId);
     }
 
 

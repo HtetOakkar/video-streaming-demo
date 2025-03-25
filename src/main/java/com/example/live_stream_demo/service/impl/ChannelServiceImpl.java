@@ -15,8 +15,6 @@ import com.example.live_stream_demo.service.IvsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.ivs.IvsClient;
-import software.amazon.awssdk.services.ivs.model.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +56,14 @@ public class ChannelServiceImpl implements ChannelService {
     public ChannelDto getChannel(Long id) {
         Channel channel = getChannelEntity(id);
         return channelMapper.toDto(channel);
+    }
+
+    @Override
+    public String getChannelPlaybackUrl(Long channelId) {
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new RecordNotFoundException("Channel not found with Id: " + channelId));
+
+        return ivsService.getLiveStreamUrls(channel.getArn());
     }
 
     private Channel getChannelEntity(Long id) {
