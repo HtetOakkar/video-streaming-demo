@@ -21,14 +21,14 @@ public class IvsServiceImpl implements IvsService {
     public IvsUrlDto createChannel(String channelName) {
         CreateChannelRequest request = CreateChannelRequest.builder()
                 .name(channelName)
-                .type(ChannelType.STANDARD)
-                .latencyMode(ChannelLatencyMode.LOW)
+                .type(ChannelType.BASIC)
+                .latencyMode(ChannelLatencyMode.NORMAL)
                 .build();
         CreateChannelResponse response = ivsClient.createChannel(request);
 
         return IvsUrlDto.builder()
                 .channelArn(response.channel().arn())
-                .ingestUrl(response.channel().ingestEndpoint())
+                .ingestUrl("rtmps://" + response.channel().ingestEndpoint() + ":443/app/")
                 .streamKey(response.streamKey().value())
                 .build();
     }
@@ -48,5 +48,8 @@ public class IvsServiceImpl implements IvsService {
         }
     }
 
+    private void getLiveChat()  {
+
+    }
 
 }

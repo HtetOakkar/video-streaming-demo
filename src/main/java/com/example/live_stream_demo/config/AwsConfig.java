@@ -8,6 +8,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ivs.IvsClient;
+import software.amazon.awssdk.services.ivschat.IvschatAsyncClient;
 
 @Configuration
 @PropertySource(value = "classpath:application.properties")
@@ -21,12 +22,26 @@ public class AwsConfig {
     @Value("${aws.region}")
     private String region;
 
+    private AwsBasicCredentials awsBasicCredentials() {
+        return  AwsBasicCredentials.create(accessKey, secretKey);
+    }
+
     @Bean
     IvsClient ivsClient() {
-        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
+        AwsBasicCredentials awsCreds = awsBasicCredentials();
         return IvsClient.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .region(Region.of(region))
+                .build();
+    }
+
+
+    @Bean
+    IvschatAsyncClient ivschatAsyncClient() {
+        AwsBasicCredentials awsCreds = awsBasicCredentials();
+        return IvschatAsyncClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
     }
 }

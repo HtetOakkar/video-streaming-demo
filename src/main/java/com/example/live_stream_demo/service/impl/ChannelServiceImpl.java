@@ -41,12 +41,14 @@ public class ChannelServiceImpl implements ChannelService {
         IvsUrlDto ivsUrlDto = ivsService.createChannel(channelName);
         String channelArn = ivsUrlDto.getChannelArn();
         String ingestUrl = ivsUrlDto.getIngestUrl();
+        String streamKey = ivsUrlDto.getStreamKey();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("User not found with Id: " + id));
         Channel channel = new Channel();
         channel.setName(channelName);
         channel.setArn(channelArn);
         channel.setIngestUrl(ingestUrl);
+        channel.setStreamKey(streamKey);
         channel.setUser(user);
         Channel savedChannel = channelRepository.save(channel);
         return channelMapper.toDto(savedChannel);
